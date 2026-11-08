@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+next-env.d.ts
+
+# Private reference material: never publish (this repo is public)
+/docs/
+/NOTES.md
+
+tsconfig.tsbuildinfo
+.vercel
+.claude/worktrees/

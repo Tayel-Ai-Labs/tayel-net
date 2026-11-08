@@ -1,0 +1,353 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   Tayel DS v1.0, token implementation
+   Source: docs/DESIGN-SYSTEM.md (transcribed from Figma "Tayel DS").
+   Three layers, in order. Components read layer 2 only.
+   =========================================================================== */
+
+/* --- Layer 1: primitives -------------------------------------------------
+   Raw values. Never reference these from a component. 72 colours:
+   7 palettes x 10 shades + white + black.                                   */
+@theme {
+  --color-primary-50:  #eeecf9;
+  --color-primary-100: #d6d3f1;
+  --color-primary-200: #ada8e3;
+  --color-primary-300: #837cd5;
+  --color-primary-400: #5a52c7;
+  --color-primary-500: #1e1b4e;  /* the brand */
+  --color-primary-600: #18163f;
+  --color-primary-700: #131130;
+  --color-primary-800: #0d0b21;
+  --color-primary-900: #080612;
+
+  --color-secondary-50:  #ebf0f9;
+  --color-secondary-100: #c7d8f0;
+  --color-secondary-200: #8fb1e1;
+  --color-secondary-300: #578ad2;
+  --color-secondary-400: #2f68bb;
+  --color-secondary-500: #2456a7;
+  --color-secondary-600: #1c4386;
+  --color-secondary-700: #153265;
+  --color-secondary-800: #0e2244;
+  --color-secondary-900: #071123;
+
+  --color-accent-50:  #f5f3ff;
+  --color-accent-100: #ede9fe;
+  --color-accent-200: #ddd6fe;
+  --color-accent-300: #c4b5fd;
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+  --color-accent-700: #6d28d9;
+  --color-accent-800: #5b21b6;
+  --color-accent-900: #4c1d95;
+
+  --color-neutral-50:  #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+
+  --color-success-50:  #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
+
+  --color-warning-50:  #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  --color-error-50:  #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  /* Spacing, base 4px. The scale skips 7, 9, 11, 13, 15, 17-19, 21-23.    */
+  --spacing: 4px;
+
+  /* Radius */
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 24px;
+
+  /* Elevation, PROVISIONAL.
+     The Figma elevation page names 8 levels but prints no values; the 9
+     effect styles have not been exported. These are stand-ins chosen to keep
+     the stated hierarchy (flat -> chip -> card -> popover -> modal -> dialog
+     -> full-screen, plus a tinted brand level). Replace all of them with the
+     real effect styles before launch. See DESIGN-SYSTEM.md section 6.        */
+  --shadow-xs:  0 1px 2px rgb(17 24 39 / 0.05);
+  --shadow-sm:  0 1px 3px rgb(17 24 39 / 0.08), 0 1px 2px -1px rgb(17 24 39 / 0.06);
+  --shadow-md:  0 4px 12px -2px rgb(17 24 39 / 0.10), 0 2px 6px -2px rgb(17 24 39 / 0.06);
+  --shadow-lg:  0 12px 28px -6px rgb(17 24 39 / 0.14), 0 4px 10px -4px rgb(17 24 39 / 0.08);
+  --shadow-xl:  0 20px 48px -12px rgb(17 24 39 / 0.20), 0 8px 16px -8px rgb(17 24 39 / 0.10);
+  --shadow-2xl: 0 32px 72px -16px rgb(17 24 39 / 0.28);
+  --shadow-brand-sm: 0 6px 20px -6px rgb(30 27 78 / 0.35);
+
+  /* Typography, families come from next/font, which sets these vars.      */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic:  var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-roboto-mono), ui-monospace, monospace;
+
+  /* Breakpoints. The DS names three frames, 375 / 768 / 1440, but 375 is the
+     mobile frame itself, not a breakpoint. Overriding sm to 375px made every
+     `sm:` utility fire on a phone, which is the opposite of how it reads, so
+     sm keeps its 640px default and the two real DS steps are md and xl.      */
+  /* Clicking the brand mark sends the orbit once around the planet, on the
+     way home. The planet stays put; only the ring and its spark travel.
+     In Tailwind v4 a custom animation is a theme token, not an @utility:
+     `@utility animate-orbit` collides with the built-in animate-* namespace
+     and silently produces no animation at all.                             */
+  --animate-orbit: tayel-orbit 1100ms cubic-bezier(0.45, 0, 0.3, 1);
+
+  @keyframes tayel-orbit {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  --breakpoint-md: 768px;   /* DS tablet  */
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;  /* DS desktop */
+}
+
+/* --- Layer 2: semantics --------------------------------------------------
+   Meaning, not value. Light is the default; dark overrides only what moves. */
+:root {
+  --bg-page:        var(--color-neutral-50);
+  --bg-surface:     #ffffff;
+  --bg-raised:      #ffffff;
+  --bg-inverse:     var(--color-primary-500);
+  --bg-subtle:      var(--color-neutral-100);
+
+  --text-primary:   var(--color-primary-500);
+  --text-secondary: var(--color-neutral-600);
+  --text-muted:     var(--color-neutral-400);
+  --text-inverse:   #ffffff;
+  --text-brand:     var(--color-primary-500);
+
+  --border-subtle:  var(--color-neutral-200);
+  --border-strong:  var(--color-neutral-300);
+
+  --interactive-primary:       var(--color-primary-500);
+  --interactive-primary-hover: var(--color-primary-600);
+  --interactive-secondary:       var(--color-secondary-500);
+  --interactive-secondary-hover: var(--color-secondary-600);
+  --interactive-disabled:      var(--color-neutral-200);
+  --interactive-disabled-text: var(--color-neutral-400);
+
+  /* Focus is violet everywhere in the system, input, checkbox, radio,
+     toggle, select. It is the one state that does not use the brand.       */
+  --focus-ring: var(--color-accent-400);
+
+  /* Error feedback (input border, helper text, Alert/Error), PROVISIONAL.
+     The DS draws an error state on Input and Alert but layer 2 names were
+     never captured; these follow the Alert spec (50 ground, 1px border a few
+     steps up the same ramp) until the Figma Color Collection is exported.  */
+  --text-error:     var(--color-error-600);
+  --border-error:   var(--color-error-500);
+  --bg-error:       var(--color-error-50);
+  --border-error-subtle: var(--color-error-200);
+
+  /* Logo sphere. Near-black on a light page; lifted on a dark one so the
+     planet does not dissolve into the background.                          */
+  --logo-sphere-from: #211e52;
+  --logo-sphere-to:   #080612;
+}
+
+[data-theme="dark"] {
+  --bg-page:        var(--color-primary-900);
+  --bg-surface:     var(--color-primary-800);
+  --bg-raised:      var(--color-primary-700);
+  --bg-inverse:     #ffffff;
+  --bg-subtle:      var(--color-primary-700);
+
+  --text-primary:   var(--color-neutral-50);
+  --text-secondary: var(--color-neutral-300);
+  --text-muted:     var(--color-neutral-400);
+  --text-inverse:   var(--color-primary-500);
+  --text-brand:     var(--color-primary-200);
+
+  --border-subtle:  var(--color-primary-600);
+  --border-strong:  var(--color-primary-400);
+
+  --interactive-primary:       var(--color-primary-300);
+  --interactive-primary-hover: var(--color-primary-200);
+  --interactive-secondary:       var(--color-secondary-300);
+  --interactive-secondary-hover: var(--color-secondary-200);
+  --interactive-disabled:      var(--color-primary-700);
+  --interactive-disabled-text: var(--color-primary-400);
+
+  --text-error:     var(--color-error-300);
+  --border-error:   var(--color-error-400);
+  --bg-error:       color-mix(in srgb, var(--color-error-500) 12%, transparent);
+  --border-error-subtle: color-mix(in srgb, var(--color-error-400) 45%, transparent);
+
+  --logo-sphere-from: #3b3685;
+  --logo-sphere-to:   #16123a;
+}
+
+/* Expose the semantic layer as Tailwind utilities (bg-surface, text-muted,
+   border-subtle...). `inline` keeps them referencing the live var, so they
+   follow the theme switch.                                                  */
+@theme inline {
+  --color-page:     var(--bg-page);
+  --color-surface:  var(--bg-surface);
+  --color-raised:   var(--bg-raised);
+  --color-inverse:  var(--bg-inverse);
+  --color-subtle:   var(--bg-subtle);
+
+  --color-ink:          var(--text-primary);
+  --color-ink-soft:     var(--text-secondary);
+  --color-ink-muted:    var(--text-muted);
+  --color-ink-inverse:  var(--text-inverse);
+
+  --color-line:        var(--border-subtle);
+  --color-line-strong: var(--border-strong);
+
+  --color-action:        var(--interactive-primary);
+  --color-action-hover:  var(--interactive-primary-hover);
+  --color-action-2:       var(--interactive-secondary);
+  --color-action-2-hover: var(--interactive-secondary-hover);
+  --color-focus:         var(--focus-ring);
+
+  --color-ink-error:         var(--text-error);
+  --color-line-error:        var(--border-error);
+  --color-line-error-subtle: var(--border-error-subtle);
+  --color-ground-error:      var(--bg-error);
+}
+
+/* --- Base ---------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;          /* Body/lg, 16px / 160% / Regular */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Arabic takes one family for everything and taller leading. Scoped to
+     dir=rtl so a single Arabic block inside an English page still gets it. */
+  [dir="rtl"], [lang="ar"] {
+    font-family: var(--font-arabic);
+    line-height: 1.8;          /* AR/Body/lg, 16px / 180% / Regular */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+  }
+
+  [dir="rtl"] :is(h1, h2, h3, h4, h5, h6),
+  [lang="ar"] :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-arabic);
+  }
+
+  code, pre {
+    font-family: var(--font-mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent-200);
+    color: var(--color-primary-500);
+  }
+}
+
+/* --- Type scale ----------------------------------------------------------
+   45 text styles live in Figma; these are the ones the site uses. Sizes and
+   line heights are verbatim from the typography page.                       */
+@utility text-display-2xl { font-size: 72px; line-height: 1.10; font-weight: 700; }
+@utility text-display-xl  { font-size: 60px; line-height: 1.10; font-weight: 700; }
+@utility text-display-lg  { font-size: 48px; line-height: 1.15; font-weight: 700; }
+
+@utility text-h1 { font-size: 40px; line-height: 1.20; font-weight: 700; }
+@utility text-h2 { font-size: 32px; line-height: 1.20; font-weight: 700; }
+@utility text-h3 { font-size: 28px; line-height: 1.25; font-weight: 500; }
+@utility text-h4 { font-size: 24px; line-height: 1.30; font-weight: 500; }
+@utility text-h5 { font-size: 20px; line-height: 1.30; font-weight: 500; }
+@utility text-h6 { font-size: 18px; line-height: 1.40; font-weight: 500; }
+
+@utility text-body-xl { font-size: 18px; line-height: 1.60; font-weight: 400; }
+@utility text-body-lg { font-size: 16px; line-height: 1.60; font-weight: 400; }
+@utility text-body-md { font-size: 14px; line-height: 1.60; font-weight: 400; }
+@utility text-body-sm { font-size: 12px; line-height: 1.50; font-weight: 400; }
+
+@utility text-label-lg { font-size: 16px; line-height: 1.40; font-weight: 600; }
+@utility text-label-md { font-size: 14px; line-height: 1.40; font-weight: 600; }
+@utility text-label-sm { font-size: 12px; line-height: 1.40; font-weight: 600; }
+
+@utility text-overline {
+  font-size: 12px;
+  line-height: 1.30;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --- Grid ----------------------------------------------------------------
+   Desktop content is 1280px (1440 frame - 80px margin each side). Column
+   width is derived, never hard-coded: the printed Figma values don't fit.   */
+@utility ds-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 16px;        /* mobile margin */
+  @media (width >= 768px)  { padding-inline: 24px; }   /* tablet margin  */
+  @media (width >= 1440px) { padding-inline: 0; }      /* margin is the gap to the 1440 frame */
+}
+
+@utility ds-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  @media (width >= 768px)  { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 16px; }
+  @media (width >= 1024px) { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
